@@ -1,5 +1,5 @@
-import { Fragment, useEffect, useState } from "react";
-import { Container, Row, Col, Card, CardHeader, CardBody } from "reactstrap";
+import { Fragment } from "react";
+import { Container, Row } from "reactstrap";
 import Breadcrumbs from "../../layout/breadcrumb";
 
 const Dashboard = () => {

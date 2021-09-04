@@ -11,7 +11,7 @@ import configDB from "../../data/customizer/config";
 const Sidebar = (props) => {
   const [sidebartoogle, setSidebartoogle] = useState(false);
   const [margin, setMargin] = useState(0);
-  const [width, setWidth] = useState(0);
+  const width = useState(0);
   const wrapper = configDB.data.settings.sidebar.type;
 
   const activeClass = () => {
