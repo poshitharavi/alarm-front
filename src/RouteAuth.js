@@ -1,16 +1,14 @@
 import { Fragment } from "react";
-import { Route, Redirect } from "react-router-dom";
+import { Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import Footer from "./layout/footer";
+import Header from "./layout/header";
 import Loader from "./layout/loader";
+import Sidebar from "./layout/sidebar";
+import Taptop from "./layout/tap-top";
 
 // import Auth from "./Auth";
-// import Loader from "../src/layout/loader";
-// import Taptop from "../src/layout/tap-top";
-// import Header from "../src/layout/header";
-// import Sidebar from "../src/layout/sidebar";
-// import Footer from "../src/layout/footer";
 
 const RouteAuth = ({ component: Component, ...rest }) => {
   return (
@@ -21,11 +19,11 @@ const RouteAuth = ({ component: Component, ...rest }) => {
         return (
           <Fragment>
             <Loader />
-            {/* <Taptop /> */}
+            <Taptop />
             <div className="page-wrapper compact-wrapper" id="pageWrapper">
-              {/* <Header /> */}
+              <Header />
               <div className="page-body-wrapper">
-                {/* <Sidebar /> */}
+                <Sidebar />
                 <div className="page-body">
                   <Component {...props} />
                 </div>

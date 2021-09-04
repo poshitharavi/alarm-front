@@ -18,6 +18,7 @@ import {
   RememberPassword,
   ForgotPassword,
 } from "../../constant";
+import logo from "../../assets/images/logo/logo.png";
 
 const Login = (props) => {
   const [togglePassword, setTogglePassword] = useState(false);
@@ -38,16 +39,7 @@ const Login = (props) => {
             <div>
               <div>
                 <a className="logo" href="#javascript">
-                  <img
-                    className="img-fluid for-light"
-                    src={require("../../assets/images/logo/login.png")}
-                    alt=""
-                  />
-                  <img
-                    className="img-fluid for-dark"
-                    src={require("../../assets/images/logo/logo_dark.png")}
-                    alt=""
-                  />
+                  <img className="img-fluid for-light" src={logo} alt="" />
                 </a>
               </div>
               <div className="login-main login-tab">
