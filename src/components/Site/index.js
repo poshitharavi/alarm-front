@@ -8,7 +8,7 @@ const Site = ({ site, onClickSiteCard }) => {
       <Col sm="12" xl="6">
         <Card
           className="card-absolute "
-          onDoubleClick={() => onClickSiteCard(site)}
+          onClick={() => onClickSiteCard(site)}
           style={{ cursor: "pointer" }}
         >
           <CardHeader className="bg-primary">

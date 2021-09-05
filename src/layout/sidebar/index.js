@@ -1,91 +1,87 @@
-import { Fragment, useState } from "react";
-import { ArrowLeft, Grid } from "react-feather";
+import { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { translate } from "react-switch-lang";
+import { ArrowLeft, ArrowRight, Grid } from "react-feather";
+import { useHistory } from "react-router";
 
-import logo from "../../assets/images/logo/logo.png";
-import logoIcon from "../../assets/images/logo/logo-icon.png";
-import { MENUITEMS } from "./menu";
 import configDB from "../../data/customizer/config";
+import logo from "../../assets/images/logo/logo.png";
+import miniLogo from "../../assets/images/logo/logo-icon.png";
+import GetService from "../../service/GetService";
+import SideBarItem from "../../components/SideBarItems";
 
 const Sidebar = (props) => {
-  const [sidebartoogle, setSidebartoogle] = useState(true);
+  const [menuItems, setMenuItems] = useState([]);
   const [margin, setMargin] = useState(0);
-  const width = useState(0);
+  const [width, setWidth] = useState(0);
+  const [sidebartoogle, setSidebartoogle] = useState(true);
   const wrapper = configDB.data.settings.sidebar.type;
+  const history = useHistory();
 
-  const activeClass = () => {
-    document.querySelector(".sidebar-link").classList.add("active");
-    document.querySelector(".bg-overlay1").classList.add("active");
-  };
+  useEffect(() => {
+    //run get all alarms
+    const getMenuItems = async () => {
+      await fetchMenuItems();
+    };
 
-  const toggletNavActive = (item) => {
-    if (window.innerWidth <= 991) {
-      document.querySelector(".page-header").className =
-        "page-header close_icon";
-      document.querySelector(".sidebar-wrapper").className =
-        "sidebar-wrapper close_icon ";
-      document
-        .querySelector(".mega-menu-container")
-        .classList.remove("d-block");
-      if (item.type === "sub") {
-        document.querySelector(".page-header").className = "page-header ";
-        document.querySelector(".sidebar-wrapper").className =
-          "sidebar-wrapper ";
+    //run on form load
+    getMenuItems();
+
+    document.querySelector(".left-arrow").classList.add("d-none");
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const fetchMenuItems = async () => {
+    GetService(`site/getAll`).then((result) => {
+      if (result.status === 1) {
+        if (result.site_list.length > 0) {
+          setMenuItems(result.site_list);
+        }
+      } else {
+        console.log(result.message);
       }
-    }
-
-    if (!item.active) {
-      MENUITEMS.map((a) => {
-        a.Items.filter((Items) => {
-          if (a.Items.includes(item)) Items.active = false;
-          if (!Items.children) return false;
-          Items.children.forEach((b) => {
-            if (Items.children.includes(item)) {
-              b.active = false;
-            }
-            if (!b.children) return false;
-            b.children.forEach((c) => {
-              if (b.children.includes(item)) {
-                c.active = false;
-              }
-            });
-          });
-          return Items;
-        });
-        return a;
-      });
-    }
-    item.active = !item.active;
+    });
   };
 
-  const setNavActive = (item) => {
-    MENUITEMS.map((menuItems) => {
-      menuItems.Items.filter((Items) => {
-        if (Items !== item) {
-          Items.active = false;
-          document.querySelector(".bg-overlay1").classList.remove("active");
-        }
-        if (Items.children && Items.children.includes(item)) {
-          Items.active = true;
-          document.querySelector(".sidebar-link").classList.add("active");
-        }
-        if (Items.children) {
-          Items.children.filter((submenuItems) => {
-            if (submenuItems.children && submenuItems.children.includes(item)) {
-              Items.active = true;
-              submenuItems.active = true;
-              return true;
-            } else {
-              return false;
-            }
-          });
-        }
-        return Items;
-      });
-      return menuItems;
-    });
-    item.active = !item.active;
+  const handleScroll = () => {
+    if (window.scrollY > 400) {
+      if (
+        configDB.data.settings.sidebar.type.split(" ").pop() ===
+          "material-type" ||
+        configDB.data.settings.sidebar.type.split(" ").pop() ===
+          "advance-layout"
+      )
+        document.querySelector(".sidebar-main").className =
+          "sidebar-main hovered";
+    } else {
+      if (document.getElementById("sidebar-main"))
+        document.querySelector(".sidebar-main").className = "sidebar-main";
+    }
+  };
+
+  const handleResize = () => {
+    setWidth(window.innerWidth - 500);
+  };
+
+  const scrollToRight = () => {
+    if (margin <= -2598 || margin <= -2034) {
+      if (width === 492) {
+        setMargin(-3570);
+      } else {
+        setMargin(-3464);
+      }
+      document.querySelector(".right-arrow").classList.add("d-none");
+      document.querySelector(".left-arrow").classList.remove("d-none");
+    } else {
+      setMargin((margin) => (margin += -width));
+      document.querySelector(".left-arrow").classList.remove("d-none");
+    }
   };
 
   const scrollToLeft = () => {
@@ -104,12 +100,6 @@ const Sidebar = (props) => {
     document.querySelector(".sidebar-link").classList.remove("active");
   };
 
-  const responsiveSidebar = () => {
-    document.querySelector(".page-header").className = "page-header close_icon";
-    document.querySelector(".sidebar-wrapper").className =
-      "sidebar-wrapper close_icon";
-  };
-
   const openCloseSidebar = (toggle) => {
     if (toggle) {
       setSidebartoogle(!toggle);
@@ -124,6 +114,12 @@ const Sidebar = (props) => {
     }
   };
 
+  const responsiveSidebar = () => {
+    document.querySelector(".page-header").className = "page-header close_icon";
+    document.querySelector(".sidebar-wrapper").className =
+      "sidebar-wrapper close_icon";
+  };
+
   return (
     <Fragment>
       <div
@@ -134,7 +130,7 @@ const Sidebar = (props) => {
       ></div>
       <div className="sidebar-wrapper" id="sidebar-wrapper">
         <div className="logo-wrapper">
-          <Link to={`/dashboard/`}>
+          <Link to={`/`}>
             <img className="img-fluid for-light" src={logo} alt="" />
           </Link>
           <div className="back-btn" onClick={() => responsiveSidebar()}>
@@ -148,8 +144,8 @@ const Sidebar = (props) => {
           </div>
         </div>
         <div className="logo-icon-wrapper">
-          <Link to={`/dashboard/`}>
-            <img className="img-fluid" src={logoIcon} alt="" />
+          <Link to={`/`}>
+            <img className="img-fluid" src={miniLogo} alt="" />
           </Link>
         </div>
         <nav className="sidebar-main" id="sidebar-main">
@@ -171,180 +167,26 @@ const Sidebar = (props) => {
                   <i className="fa fa-angle-right pl-2" aria-hidden="true"></i>
                 </div>
               </li>
-              {MENUITEMS.map((Item, i) => (
-                <Fragment key={i}>
-                  <li className="sidebar-main-title">
-                    <div>
-                      <h6 className="lan-1">{props.t(Item.menutitle)}</h6>
-                      <p className="lan-2">{props.t(Item.menucontent)}</p>
-                    </div>
-                  </li>
-                  {Item.Items.map((menuItem, i) => (
-                    <li className="sidebar-list" key={i}>
-                      {menuItem.type === "sub" ? (
-                        <a
-                          href="javascript"
-                          className={`sidebar-link sidebar-title ${
-                            menuItem.active ? activeClass() : ""
-                          }`}
-                          onClick={(event) => {
-                            event.preventDefault();
-                            setNavActive(menuItem);
-                          }}
-                        >
-                          <menuItem.icon />
-                          <span>{props.t(menuItem.title)}</span>
-                          {menuItem.badge ? (
-                            <label className={menuItem.badge}>
-                              {menuItem.badgetxt}
-                            </label>
-                          ) : (
-                            ""
-                          )}
-                          <div className="according-menu">
-                            {menuItem.active ? (
-                              <i className="fa fa-angle-down"></i>
-                            ) : (
-                              <i className="fa fa-angle-right"></i>
-                            )}
-                          </div>
-                        </a>
-                      ) : (
-                        ""
-                      )}
-
-                      {menuItem.type === "link" ? (
-                        <Link
-                          to={menuItem.path + "/"}
-                          className={`sidebar-link sidebar-title link-nav  ${
-                            menuItem.active ? "active" : ""
-                          }`}
-                          onClick={() => toggletNavActive(menuItem)}
-                        >
-                          <menuItem.icon />
-                          <span>{props.t(menuItem.title)}</span>
-                          {menuItem.badge ? (
-                            <label className={menuItem.badge}>
-                              {menuItem.badgetxt}
-                            </label>
-                          ) : (
-                            ""
-                          )}
-                        </Link>
-                      ) : (
-                        ""
-                      )}
-
-                      {menuItem.children ? (
-                        <ul
-                          className="sidebar-submenu"
-                          style={
-                            menuItem.active
-                              ? sidebartoogle
-                                ? {
-                                    opacity: 1,
-                                    transition: "opacity 500ms ease-in",
-                                  }
-                                : { display: "block" }
-                              : { display: "none" }
-                          }
-                        >
-                          {menuItem.children.map((childrenItem, index) => {
-                            return (
-                              <li key={index}>
-                                {childrenItem.type === "sub" ? (
-                                  <a
-                                    href="javascript"
-                                    className={`${
-                                      childrenItem.active ? "active" : ""
-                                    }`}
-                                    onClick={(event) => {
-                                      event.preventDefault();
-                                      toggletNavActive(childrenItem);
-                                    }}
-                                  >
-                                    {props.t(childrenItem.title)}
-                                    <span className="sub-arrow">
-                                      <i className="fa fa-chevron-right"></i>
-                                    </span>
-                                    <div className="according-menu">
-                                      {childrenItem.active ? (
-                                        <i className="fa fa-angle-down"></i>
-                                      ) : (
-                                        <i className="fa fa-angle-right"></i>
-                                      )}
-                                    </div>
-                                  </a>
-                                ) : (
-                                  ""
-                                )}
-
-                                {childrenItem.type === "link" ? (
-                                  <Link
-                                    to={childrenItem.path + "/"}
-                                    className={`${
-                                      childrenItem.active ? "active" : ""
-                                    }`}
-                                    onClick={() =>
-                                      toggletNavActive(childrenItem)
-                                    }
-                                  >
-                                    {props.t(childrenItem.title)}
-                                  </Link>
-                                ) : (
-                                  ""
-                                )}
-
-                                {childrenItem.children ? (
-                                  <ul
-                                    className="nav-sub-childmenu submenu-content"
-                                    style={
-                                      childrenItem.active
-                                        ? { display: "block" }
-                                        : { display: "none" }
-                                    }
-                                  >
-                                    {childrenItem.children.map(
-                                      (childrenSubItem, key) => (
-                                        <li key={key}>
-                                          {childrenSubItem.type === "link" ? (
-                                            <Link
-                                              to={childrenSubItem.path + "/"}
-                                              className={`${
-                                                childrenSubItem.active
-                                                  ? "active"
-                                                  : ""
-                                              }`}
-                                              onClick={() =>
-                                                toggletNavActive(
-                                                  childrenSubItem
-                                                )
-                                              }
-                                            >
-                                              {props.t(childrenSubItem.title)}
-                                            </Link>
-                                          ) : (
-                                            ""
-                                          )}
-                                        </li>
-                                      )
-                                    )}
-                                  </ul>
-                                ) : (
-                                  ""
-                                )}
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      ) : (
-                        ""
-                      )}
-                    </li>
-                  ))}
-                </Fragment>
-              ))}
+              <Fragment>
+                <li
+                  className="sidebar-main-title"
+                  onClick={() => history.push("/")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <div>
+                    <h6 className="lan-1">{"Dashboard"}</h6>
+                  </div>
+                </li>
+                {menuItems.length > 0
+                  ? menuItems.map((item, index) => (
+                      <SideBarItem key={index} item={item} />
+                    ))
+                  : ""}
+              </Fragment>
             </ul>
+          </div>
+          <div className="right-arrow" onClick={scrollToRight}>
+            <ArrowRight />
           </div>
         </nav>
       </div>
@@ -352,4 +194,4 @@ const Sidebar = (props) => {
   );
 };
 
-export default translate(Sidebar);
+export default Sidebar;

@@ -21,6 +21,7 @@ const SiteDescription = (props) => {
   const site = props.location.state.site;
   const [acitiveTabLine, setAcitiveTabLine] = useState("1");
   const [activeAlarmDetails, setActiveAlarmDetails] = useState([]);
+  // eslint-disable-next-line
   const [hisoryAlarmDetails, setHisoryAlarmDetails] = useState([]);
 
   useEffect(() => {

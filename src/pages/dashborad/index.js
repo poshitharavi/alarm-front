@@ -61,7 +61,7 @@ const Dashboard = () => {
                   key={index}
                   alarm={alarm}
                   time={`${Math.floor(Math.random() * 24)}:${
-                    Math.floor(Math.random() * (60 - 10 + 1)) + 10 //calculate random time
+                    Math.floor(Math.random() * (59 - 10 + 1)) + 10 //calculate random time
                   }`}
                   onClickCard={openSites}
                 />

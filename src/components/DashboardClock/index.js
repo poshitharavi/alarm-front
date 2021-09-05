@@ -8,7 +8,7 @@ const DashboardClock = ({ alarm, time, onClickCard }) => {
         <Card>
           <div
             className="mobile-clock-widget "
-            onDoubleClick={() => onClickCard(alarm)}
+            onClick={() => onClickCard(alarm)}
             style={{ cursor: "pointer" }}
           >
             <div>
