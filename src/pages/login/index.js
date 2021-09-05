@@ -14,21 +14,49 @@ import {
 import {
   Password,
   SignIn,
-  EmailAddress,
   RememberPassword,
   ForgotPassword,
 } from "../../constant";
 import logo from "../../assets/images/logo/logo.png";
+import PostService from "../../service/PostService";
+import { toast } from "react-toastify";
+import { useHistory } from "react-router";
+
+import Auth from "../../Auth";
 
 const Login = (props) => {
   const [togglePassword, setTogglePassword] = useState(false);
   const [password, setPassword] = useState("");
+  const [postData, setPostData] = useState({
+    user_name: "",
+    password: "",
+  });
+
+  const history = useHistory();
 
   const handleChange = (e) => {
     setPassword(e.target.value);
   };
   const HideShowPassword = (tPassword) => {
     setTogglePassword(!tPassword);
+  };
+
+  const process = () => {
+    PostService(`user/login`, postData).then((result) => {
+      if (result.status === 1) {
+        sessionStorage.setItem("alarmUserDetails", JSON.stringify(result));
+        Auth.login(() => {
+          history.push({
+            pathname: "/dashboard",
+          });
+        });
+      } else {
+        console.log(result);
+        toast.error(`Error! ${result.message}`, {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      }
+    });
   };
 
   return (
@@ -47,14 +75,21 @@ const Login = (props) => {
                   <TabPane className="fade show" tabId="1">
                     <Form className="theme-form">
                       <h4>{"Sign In"}</h4>
-                      <p>{"Enter your email & password to login"}</p>
+                      <p>{"Enter your username & password to login"}</p>
                       <FormGroup>
-                        <Label className="col-form-label">{EmailAddress}</Label>
+                        <Label className="col-form-label">{"Username"}</Label>
                         <Input
                           className="form-control"
-                          type="email"
+                          type="text"
+                          value={postData.user_name}
                           required={true}
-                          placeholder="test@gmail.com"
+                          onChange={(e) =>
+                            setPostData({
+                              ...postData,
+                              user_name: e.target.value,
+                            })
+                          }
+                          placeholder="username"
                         />
                       </FormGroup>
                       <FormGroup>
@@ -64,7 +99,13 @@ const Login = (props) => {
                           type={togglePassword ? "text" : "password"}
                           name="login[password]"
                           value={password}
-                          onChange={(e) => handleChange(e)}
+                          onChange={(e) => {
+                            handleChange(e);
+                            setPostData({
+                              ...postData,
+                              password: e.target.value,
+                            });
+                          }}
                           required={true}
                           placeholder="*********"
                         />
@@ -85,7 +126,11 @@ const Login = (props) => {
                         <a className="link" href="#javascript">
                           {ForgotPassword}
                         </a>
-                        <Button color="primary" className="btn-block">
+                        <Button
+                          color="primary"
+                          className="btn-block"
+                          onClick={process}
+                        >
                           {SignIn}
                         </Button>
                       </div>
