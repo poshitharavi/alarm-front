@@ -42,7 +42,7 @@ const Sites = (props) => {
     history.push({
       pathname: "/site-description",
       state: {
-        alarm: alarm,
+        site: site,
       },
     });
   };

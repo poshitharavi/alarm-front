@@ -1,8 +1,7 @@
 import { Row, Col, Table } from "reactstrap";
+import Moment from "react-moment";
 
-const cartProducts = [];
-
-const SiteDescriptionTable = () => {
+const SiteDescriptionTable = ({ alarmDetails }) => {
   return (
     <>
       <Row>
@@ -11,26 +10,22 @@ const SiteDescriptionTable = () => {
             <Table borderless>
               <thead>
                 <tr>
-                  <th scope="col">{"Details"}</th>
-                  <th scope="col">{"Quantity"}</th>
-                  <th scope="col">{"Status"}</th>
-                  <th scope="col">{"Price"}</th>
+                  <th scope="col">{"Alarm Id"}</th>
+                  <th scope="col">{"Alarm"}</th>
+                  <th scope="col">{"Date"}</th>
+                  <th scope="col">{"Time"}</th>
                 </tr>
               </thead>
               <tbody>
-                {cartProducts.map((data) => (
-                  <tr key={data.details}>
-                    <td>{data.details}</td>
-                    <td className="digits">{data.qty}</td>
-                    <td className={`font-${data.statusColor}`}>
-                      {data.status}
+                {alarmDetails.map((data, index) => (
+                  <tr key={index}>
+                    <td className="digits">{data.alarm_id}</td>
+                    <td>{data.alarm_description}</td>
+                    <td>
+                      <Moment format="YYYY/MM/DD" date={data.alarm_time} />
                     </td>
                     <td>
-                      <div
-                        className={`span badge badge-pill ${data.className}`}
-                      >
-                        {data.price}
-                      </div>
+                      <Moment format="HH:MM" date={data.alarm_time} />
                     </td>
                   </tr>
                 ))}

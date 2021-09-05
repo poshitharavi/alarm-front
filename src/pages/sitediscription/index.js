@@ -1,4 +1,5 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import {
   Container,
   Row,
@@ -14,13 +15,38 @@ import {
 import SiteDescriptionTable from "../../components/SiteDescriptionTable";
 
 import Breadcrumbs from "../../layout/breadcrumb";
+import GetService from "../../service/GetService";
 
-const SiteDescription = () => {
+const SiteDescription = (props) => {
+  const site = props.location.state.site;
   const [acitiveTabLine, setAcitiveTabLine] = useState("1");
+  const [activeAlarmDetails, setActiveAlarmDetails] = useState([]);
+  const [hisoryAlarmDetails, setHisoryAlarmDetails] = useState([]);
+
+  useEffect(() => {
+    const getActiveAlarmDetails = async (id) => {
+      await fetchActiveAlarmDetails(id);
+    };
+
+    getActiveAlarmDetails(site.site_id); // eslint-disable-next-line
+  }, []);
+
+  const fetchActiveAlarmDetails = async (id) => {
+    GetService(`alarm/getAlamsBySite/${id}`).then((result) => {
+      if (result.status === undefined) {
+        setActiveAlarmDetails(result);
+      } else {
+        console.log(result.message);
+        toast.error("Error! Alarms Not Found ", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      }
+    });
+  };
 
   return (
     <Fragment>
-      <Breadcrumbs parent="Sites" title="Site Description" />
+      <Breadcrumbs parent="Sites" title={`${site.site_name} - Site`} />
       <Container fluid={true}>
         <Row>
           <Col sm="12">
@@ -31,7 +57,6 @@ const SiteDescription = () => {
                     <Nav className="flex-column nav-pills border-tab nav-left">
                       <NavItem>
                         <NavLink
-                          href="#javascript"
                           className={acitiveTabLine === "1" ? "active" : ""}
                           onClick={() => setAcitiveTabLine("1")}
                         >
@@ -40,7 +65,6 @@ const SiteDescription = () => {
                       </NavItem>
                       <NavItem>
                         <NavLink
-                          href="#javascript"
                           className={acitiveTabLine === "2" ? "active" : ""}
                           onClick={() => setAcitiveTabLine("2")}
                         >
@@ -52,10 +76,22 @@ const SiteDescription = () => {
                   <Col sm="9">
                     <TabContent activeTab={acitiveTabLine}>
                       <TabPane className="fade show" tabId="1">
-                        <SiteDescriptionTable />
+                        {activeAlarmDetails.length > 0 ? (
+                          <SiteDescriptionTable
+                            alarmDetails={activeAlarmDetails}
+                          />
+                        ) : (
+                          ""
+                        )}
                       </TabPane>
                       <TabPane tabId="2">
-                        <SiteDescriptionTable />
+                        {hisoryAlarmDetails.length > 0 ? (
+                          <SiteDescriptionTable
+                            alarmDetails={hisoryAlarmDetails}
+                          />
+                        ) : (
+                          <p>No history data found</p>
+                        )}
                       </TabPane>
                     </TabContent>
                   </Col>
