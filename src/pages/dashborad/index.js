@@ -41,11 +41,11 @@ const Dashboard = () => {
   /**
    * Open Sites Page
    */
-  const openSites = (id) => {
+  const openSites = (alarm) => {
     history.push({
       pathname: "/sites",
       state: {
-        alarmId: id,
+        alarm: alarm,
       },
     });
   };

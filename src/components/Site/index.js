@@ -1,38 +1,31 @@
-import { useHistory } from "react-router";
+import { Clock } from "react-feather";
 import { Card, CardBody, CardHeader, Col } from "reactstrap";
 
-const Site = () => {
-  const history = useHistory();
-  const handleRoute = () => {
-    history.push("/site-description");
-  };
+const Site = ({ site, onClickSiteCard }) => {
   return (
     <>
       <Col sm="12" xl="6">
         <Card
-          className="card-absolute"
-          onDoubleClick={handleRoute}
+          className="card-absolute "
+          onDoubleClick={() => onClickSiteCard(site)}
           style={{ cursor: "pointer" }}
         >
           <CardHeader className="bg-primary">
-            <h5>{"Site 1"}</h5>
+            <h5>{site.site_name}</h5>
           </CardHeader>
-          <CardBody>
-            <p>
-              {
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been"
-              }
-              {
-                "the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley"
-              }
-              {
-                "of type and scrambled. Lorem Ipsum is simply dummy text of the printing and typesetting"
-              }
-              {
-                "industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an"
-              }
-              {"unknown printer took a galley of type and scrambled."}
-            </p>
+          <CardBody className="b-r-4 card-body">
+            <div className="media static-top-widget">
+              <div className="align-self-center text-center">
+                <Clock />
+              </div>
+              <div className="media-body">
+                <span className="m-0">Alarm Time</span>
+                <h4 className="mb-0 counter">
+                  {site.alarm_time !== "null" ? site.alarm_time : "00:00"}
+                </h4>
+                <Clock className="icon-bg" />
+              </div>
+            </div>
           </CardBody>
         </Card>
       </Col>
