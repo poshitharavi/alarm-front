@@ -1,17 +1,4 @@
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  CardHeader,
-  CardBody,
-  Nav,
-  NavItem,
-  NavLink,
-  TabContent,
-  TabPane,
-  Table,
-} from "reactstrap";
+import { Row, Col, Table } from "reactstrap";
 
 const cartProducts = [];
 

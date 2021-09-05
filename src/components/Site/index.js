@@ -1,10 +1,19 @@
-import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
+import { useHistory } from "react-router";
+import { Card, CardBody, CardHeader, Col } from "reactstrap";
 
 const Site = () => {
+  const history = useHistory();
+  const handleRoute = () => {
+    history.push("/site-description");
+  };
   return (
     <>
       <Col sm="12" xl="6">
-        <Card className="card-absolute">
+        <Card
+          className="card-absolute"
+          onDoubleClick={handleRoute}
+          style={{ cursor: "pointer" }}
+        >
           <CardHeader className="bg-primary">
             <h5>{"Site 1"}</h5>
           </CardHeader>

@@ -1,10 +1,16 @@
-import { Fragment } from "react";
-import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
+import { Fragment, useEffect } from "react";
+import { Container, Row } from "reactstrap";
 import Site from "../../components/Site";
 
 import Breadcrumbs from "../../layout/breadcrumb";
 
-const Sites = () => {
+const Sites = (props) => {
+  console.log(props.location.state.alarmId);
+
+  useEffect(() => {}, []);
+
+  const fetchSiteDetails = async () => {};
+
   return (
     <Fragment>
       <Breadcrumbs parent="Alarm" title="Sites" />

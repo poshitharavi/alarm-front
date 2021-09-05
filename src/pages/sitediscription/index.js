@@ -4,14 +4,12 @@ import {
   Row,
   Col,
   Card,
-  CardHeader,
   CardBody,
   Nav,
   NavItem,
   NavLink,
   TabContent,
   TabPane,
-  Table,
 } from "reactstrap";
 import SiteDescriptionTable from "../../components/SiteDescriptionTable";
 
