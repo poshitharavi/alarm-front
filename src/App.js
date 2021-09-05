@@ -1,16 +1,20 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import Login from "./pages/login";
-import Dash from "./pages/dashborad";
 import RouteAuth from "./RouteAuth";
+import Dashboard from "./pages/dashborad";
+import Sites from "./pages/sites";
+import SiteDescription from "./pages/sitediscription";
 
 function App() {
   return (
     <Router>
       <Switch>
-        <Route exact path="/" component={Login} />
         <Route exact path="/login" component={Login} />
-        <RouteAuth exact path="/dashboard" component={Dash} />
+        <RouteAuth exact path="/" component={Dashboard} />
+        <RouteAuth exact path="/dashboard" component={Dashboard} />
+        <RouteAuth exact path="/sites" component={Sites} />
+        <RouteAuth exact path="/site-description" component={SiteDescription} />
       </Switch>
     </Router>
   );

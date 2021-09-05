@@ -9,7 +9,7 @@ import { MENUITEMS } from "./menu";
 import configDB from "../../data/customizer/config";
 
 const Sidebar = (props) => {
-  const [sidebartoogle, setSidebartoogle] = useState(false);
+  const [sidebartoogle, setSidebartoogle] = useState(true);
   const [margin, setMargin] = useState(0);
   const width = useState(0);
   const wrapper = configDB.data.settings.sidebar.type;
