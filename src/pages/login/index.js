@@ -32,6 +32,7 @@ const Login = (props) => {
   const [togglePassword, setTogglePassword] = useState(false);
 
   const [value, setValue] = useState(localStorage.getItem("profileURL" || man));
+
   const [name, setName] = useState(localStorage.getItem("Name"));
 
   useEffect(() => {

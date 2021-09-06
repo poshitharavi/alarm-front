@@ -3,6 +3,7 @@ import { Bell, FileText, LogIn, Mail, User } from "react-feather"; // eslint-dis
 import { useHistory } from "react-router-dom";
 
 import man from "../../assets/images/dashboard/profile.jpg";
+
 import Auth from "../../Auth";
 
 const Rightbar = () => {
