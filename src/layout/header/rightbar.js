@@ -1,22 +1,33 @@
-import { Fragment, useState } from "react";
-import { Bell, FileText, LogIn, Mail, User } from "react-feather";
+import { Fragment, useState } from "react"; // eslint-disable-next-line
+import { Bell, FileText, LogIn, Mail, User } from "react-feather"; // eslint-disable-next-line
 import { useHistory } from "react-router-dom";
 
 import man from "../../assets/images/dashboard/profile.jpg";
+import Auth from "../../Auth";
 
 const Rightbar = () => {
-  const history = useHistory();
-  const [notificationDropDown, setNotificationDropDown] = useState(false);
+  // eslint-disable-next-line
+  const [name, setName] = useState(localStorage.getItem("Name")); // eslint-disable-next-line
+  const [notificationDropDown, setNotificationDropDown] = useState(false); // eslint-disable-next-line
 
-  const UserMenuRedirect = (redirect) => {
-    history.push(redirect);
+  const history = useHistory();
+
+  // const UserMenuRedirect = (redirect) => {
+  //   history.push(redirect);
+  // };
+
+  const logoutUser = () => {
+    Auth.logout(() => {
+      sessionStorage.clear();
+      history.push("/login");
+    });
   };
 
   return (
     <Fragment>
       <div className="nav-right col-8 pull-right right-header p-0">
         <ul className="nav-menus">
-          <li className="onhover-dropdown">
+          {/* <li className="onhover-dropdown">
             <div
               className="notification-box"
               onClick={() => setNotificationDropDown(!notificationDropDown)}
@@ -67,19 +78,19 @@ const Rightbar = () => {
                 </button>
               </li>
             </ul>
-          </li>
+          </li> */}
           <li className="profile-nav onhover-dropdown p-0">
             <div className="media profile-media">
               <img className="b-r-10" src={man} alt="" />
               <div className="media-body">
-                <span>{"Test User"}</span>
+                <span>{name}</span>
                 <p className="mb-0 font-roboto">
-                  {"Admin"} <i className="middle fa fa-angle-down"></i>
+                  {"user"} <i className="middle fa fa-angle-down"></i>
                 </p>
               </div>
             </div>
             <ul className="profile-dropdown onhover-show-div">
-              <li onClick={() => UserMenuRedirect(``)}>
+              {/* <li onClick={() => UserMenuRedirect(``)}>
                 <User />
                 <span>{"Account"} </span>
               </li>
@@ -90,8 +101,8 @@ const Rightbar = () => {
               <li onClick={() => UserMenuRedirect(``)}>
                 <FileText />
                 <span>{"Taskboard"}</span>
-              </li>
-              <li>
+              </li> */}
+              <li onClick={logoutUser}>
                 <LogIn />
                 <span>{"LogOut"}</span>
               </li>
