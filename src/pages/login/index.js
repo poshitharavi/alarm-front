@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Container,
   Row,
@@ -8,8 +8,6 @@ import {
   Input,
   Label,
   Button,
-  TabContent,
-  TabPane,
 } from "reactstrap";
 import {
   Password,
@@ -23,38 +21,48 @@ import { toast } from "react-toastify";
 import { useHistory } from "react-router";
 
 import Auth from "../../Auth";
+import man from "../../assets/images/dashboard/profile.jpg";
 
 const Login = (props) => {
-  const [togglePassword, setTogglePassword] = useState(false);
+  const [userName, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [postData, setPostData] = useState({
-    user_name: "",
-    password: "",
-  });
+  const [authUser, setAuthUser] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [userDetails, setUserDetails] = useState();
+  const [togglePassword, setTogglePassword] = useState(false);
+
+  const [value, setValue] = useState(localStorage.getItem("profileURL" || man));
+  const [name, setName] = useState(localStorage.getItem("Name"));
+
+  useEffect(() => {
+    localStorage.setItem("profileURL", value);
+    localStorage.setItem("Name", name);
+    localStorage.setItem("AuthData", authUser);
+    sessionStorage.setItem("AuthData", JSON.stringify(authUser));
+    localStorage.setItem("loggedUserDetails", userDetails);
+  }, [value, name, authUser, userDetails]);
 
   const history = useHistory();
 
-  const handleChange = (e) => {
-    setPassword(e.target.value);
-  };
-  const HideShowPassword = (tPassword) => {
-    setTogglePassword(!tPassword);
-  };
-
-  const process = () => {
-    PostService(`user/login`, postData).then((result) => {
+  const loginAuth = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    await PostService(`user/login`, {
+      user_name: userName,
+      password: password,
+    }).then((result) => {
       if (result.status === 1) {
-        sessionStorage.setItem("alarmUserDetails", JSON.stringify(result));
+        setValue(man);
+        setName(result.first_name);
+        setAuthUser(true);
+        setUserDetails(JSON.stringify(result));
+        console.log("session", JSON.parse(sessionStorage.getItem("AuthData")));
         Auth.login(() => {
-          history.push({
-            pathname: "/dashboard",
-          });
+          history.push(`/`);
         });
       } else {
         console.log(result);
-        toast.error(`Error! ${result.message}`, {
-          position: toast.POSITION.TOP_RIGHT,
-        });
+        toast.error(`Error! username or password is incorrect`);
       }
     });
   };
@@ -71,72 +79,56 @@ const Login = (props) => {
                 </a>
               </div>
               <div className="login-main login-tab">
-                <TabContent activeTab="1" className="content-login">
-                  <TabPane className="fade show" tabId="1">
-                    <Form className="theme-form">
-                      <h4>{"Sign In"}</h4>
-                      <p>{"Enter your username & password to login"}</p>
-                      <FormGroup>
-                        <Label className="col-form-label">{"Username"}</Label>
-                        <Input
-                          className="form-control"
-                          type="text"
-                          value={postData.user_name}
-                          required={true}
-                          onChange={(e) =>
-                            setPostData({
-                              ...postData,
-                              user_name: e.target.value,
-                            })
-                          }
-                          placeholder="username"
-                        />
-                      </FormGroup>
-                      <FormGroup>
-                        <Label className="col-form-label">{Password}</Label>
-                        <Input
-                          className="form-control"
-                          type={togglePassword ? "text" : "password"}
-                          name="login[password]"
-                          value={password}
-                          onChange={(e) => {
-                            handleChange(e);
-                            setPostData({
-                              ...postData,
-                              password: e.target.value,
-                            });
-                          }}
-                          required={true}
-                          placeholder="*********"
-                        />
-                        <div
-                          className="show-hide"
-                          onClick={() => HideShowPassword(togglePassword)}
-                        >
-                          <span className={togglePassword ? "" : "show"}></span>
-                        </div>
-                      </FormGroup>
-                      <div className="form-group mb-0">
-                        <div className="checkbox ml-3">
-                          <Input id="checkbox1" type="checkbox" />
-                          <Label className="text-muted" for="checkbox1">
-                            {RememberPassword}
-                          </Label>
-                        </div>
-                        <a className="link" href="#javascript">
-                          {ForgotPassword}
-                        </a>
-                        <Button
-                          color="primary"
-                          className="btn-block"
-                          onClick={process}
-                        >
-                          {SignIn}
-                        </Button>
-                      </div>
-                    </Form>
-                  </TabPane>
-                </TabContent>
+                <Form className="theme-form">
+                  <h4>{"Sign In"}</h4>
+                  <p>{"Enter your username & password to login"}</p>
+                  <FormGroup>
+                    <Label className="col-form-label">{"Username"}</Label>
+                    <Input
+                      className="form-control"
+                      type="text"
+                      defaultValue={userName}
+                      required={true}
+                      onChange={(e) => setUsername(e.target.value)}
+                      placeholder="username"
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label className="col-form-label">{Password}</Label>
+                    <Input
+                      className="form-control"
+                      type={togglePassword ? "text" : "password"}
+                      onChange={(e) => setPassword(e.target.value)}
+                      defaultValue={password}
+                      required=""
+                    />
+                    <div
+                      className="show-hide"
+                      onClick={() => setTogglePassword(!togglePassword)}
+                    >
+                      <span className={togglePassword ? "" : "show"}></span>
+                    </div>
+                  </FormGroup>
+                  <div className="form-group mb-0">
+                    <div className="checkbox ml-3">
+                      <Input id="checkbox1" type="checkbox" />
+                      <Label className="text-muted" for="checkbox1">
+                        {RememberPassword}
+                      </Label>
+                    </div>
+                    <a className="link" href="#javascript">
+                      {ForgotPassword}
+                    </a>
+                    <Button
+                      color="primary"
+                      className="btn-block"
+                      disabled={loading ? loading : loading}
+                      onClick={(e) => loginAuth(e)}
+                    >
+                      {loading ? "LOADING..." : SignIn}
+                    </Button>
+                  </div>
+                </Form>
               </div>
             </div>
           </div>

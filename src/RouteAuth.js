@@ -15,6 +15,7 @@ const RouteAuth = ({ component: Component, ...rest }) => {
     <Route
       {...rest}
       render={(props) => {
+        console.log(Auth.isAuthenticated());
         if (Auth.isAuthenticated()) {
           return (
             <Fragment>
@@ -38,7 +39,6 @@ const RouteAuth = ({ component: Component, ...rest }) => {
             <Redirect
               to={{
                 pathname: "/login",
-                state: props.location,
               }}
             />
           );
