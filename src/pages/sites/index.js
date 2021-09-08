@@ -19,8 +19,15 @@ const Sites = (props) => {
       await fetchSiteDetails(id);
     };
 
-    getAllSites(alarm.alarm_id); // eslint-disable-next-line
-  }, []);
+    const interval = setInterval(() => {
+      // eslint-disable-next-line
+      getAllSites(alarm.alarm_id);
+    }, 15000);
+    // eslint-disable-next-line
+    getAllSites(alarm.alarm_id);
+
+    return () => clearInterval(interval);
+  }, [alarm]);
 
   const fetchSiteDetails = async (id) => {
     GetService(`alarm/getAlamsById/${id}`).then((result) => {

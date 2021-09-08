@@ -8,7 +8,7 @@ const Footer = () => {
         <Container fluid={true}>
           <Row>
             <Col md="12" className="footer-copyright text-center">
-              <p className="mb-0">{"Copyright 2021 © Name."}</p>
+              <p className="mb-0">{"Copyright 2021 © Mihin Tech."}</p>
             </Col>
           </Row>
         </Container>
