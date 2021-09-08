@@ -15,7 +15,6 @@ const RouteAuth = ({ component: Component, ...rest }) => {
     <Route
       {...rest}
       render={(props) => {
-        console.log(Auth.isAuthenticated());
         if (Auth.isAuthenticated()) {
           return (
             <Fragment>

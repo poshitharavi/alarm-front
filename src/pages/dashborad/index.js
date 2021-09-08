@@ -2,7 +2,7 @@ import { Fragment, useState, useEffect } from "react";
 import { useHistory } from "react-router";
 import { toast } from "react-toastify";
 import { Container, Row } from "reactstrap";
-import DashboardClock from "../../components/DashboardClock";
+import DashboardGauge from "../../components/DashboardGauge";
 
 import Breadcrumbs from "../../layout/breadcrumb";
 import GetService from "../../service/GetService";
@@ -18,8 +18,14 @@ const Dashboard = () => {
       await fetchAllAlarms();
     };
 
+    const interval = setInterval(() => {
+      getAllAlarms();
+    }, 15000);
+
     //run on form load
     getAllAlarms();
+
+    return () => clearInterval(interval);
   }, []);
 
   /* *
@@ -57,12 +63,9 @@ const Dashboard = () => {
         <Row>
           {alarms.length > 0
             ? alarms.map((alarm, index) => (
-                <DashboardClock
+                <DashboardGauge
                   key={index}
                   alarm={alarm}
-                  time={`${Math.floor(Math.random() * 24)}:${
-                    Math.floor(Math.random() * (59 - 10 + 1)) + 10 //calculate random time
-                  }`}
                   onClickCard={openSites}
                 />
               ))

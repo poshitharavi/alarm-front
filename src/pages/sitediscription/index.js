@@ -13,6 +13,7 @@ import {
   TabPane,
 } from "reactstrap";
 import SiteDescriptionTable from "../../components/SiteDescriptionTable";
+import SiteDiscriptionHistoryTable from "../../components/SiteDiscriptionHistoryTable";
 
 import Breadcrumbs from "../../layout/breadcrumb";
 import GetService from "../../service/GetService";
@@ -29,6 +30,11 @@ const SiteDescription = (props) => {
       await fetchActiveAlarmDetails(id);
     };
 
+    const getHistoryAlarmDetails = async (id) => {
+      await fetchHistoryAlarmDetails(id);
+    };
+
+    getHistoryAlarmDetails(site.site_id); // eslint-disable-next-line
     getActiveAlarmDetails(site.site_id); // eslint-disable-next-line
   }, []);
 
@@ -36,6 +42,19 @@ const SiteDescription = (props) => {
     GetService(`alarm/getAlamsBySite/${id}`).then((result) => {
       if (result.status === undefined) {
         setActiveAlarmDetails(result);
+      } else {
+        console.log(result.message);
+        toast.error("Error! Alarms Not Found ", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      }
+    });
+  };
+
+  const fetchHistoryAlarmDetails = async (id) => {
+    GetService(`alarm/getAlamsHistoryBySite/${id}`).then((result) => {
+      if (result.status === undefined) {
+        setHisoryAlarmDetails(result);
       } else {
         console.log(result.message);
         toast.error("Error! Alarms Not Found ", {
@@ -82,12 +101,12 @@ const SiteDescription = (props) => {
                             alarmDetails={activeAlarmDetails}
                           />
                         ) : (
-                          ""
+                          <p>No history data found</p>
                         )}
                       </TabPane>
                       <TabPane tabId="2">
                         {hisoryAlarmDetails.length > 0 ? (
-                          <SiteDescriptionTable
+                          <SiteDiscriptionHistoryTable
                             alarmDetails={hisoryAlarmDetails}
                           />
                         ) : (
