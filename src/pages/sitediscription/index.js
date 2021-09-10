@@ -19,6 +19,7 @@ import Breadcrumbs from "../../layout/breadcrumb";
 import GetService from "../../service/GetService";
 
 const SiteDescription = (props) => {
+  const siteId = props.match.params.id;
   const site = props.location.state.site;
   const [acitiveTabLine, setAcitiveTabLine] = useState("1");
   const [activeAlarmDetails, setActiveAlarmDetails] = useState([]);
@@ -31,8 +32,8 @@ const SiteDescription = (props) => {
       // await fetchHistoryAlarmDetails(id);
     };
 
-    getAlarmDetails(site.site_id); // eslint-disable-next-line
-  }, [site]);
+    getAlarmDetails(siteId);
+  }, [site, siteId]);
 
   const fetchActiveAlarmDetails = async (id) => {
     GetService(`alarm/getAlamsBySite/${id}`).then((result) => {
@@ -48,6 +49,7 @@ const SiteDescription = (props) => {
     });
   };
 
+  // eslint-disable-next-line
   const fetchHistoryAlarmDetails = async (id) => {
     GetService(`alarm/getAlamsHistoryBySite/${id}`).then((result) => {
       if (result.status === undefined) {

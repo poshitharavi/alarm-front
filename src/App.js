@@ -14,7 +14,11 @@ function App() {
         <RouteAuth exact path="/" component={Dashboard} />
         <RouteAuth exact path="/dashboard" component={Dashboard} />
         <RouteAuth exact path="/sites" component={Sites} />
-        <RouteAuth exact path="/site-description" component={SiteDescription} />
+        <RouteAuth
+          exact
+          path="/site-description/:id"
+          component={SiteDescription}
+        />
       </Switch>
     </Router>
   );

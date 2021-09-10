@@ -48,7 +48,7 @@ const Sites = (props) => {
    */
   const openSiteDetails = (site) => {
     history.push({
-      pathname: "/site-description",
+      pathname: `/site-description/${site.site_id}`,
       state: {
         site: site,
       },

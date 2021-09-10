@@ -4,7 +4,7 @@ const SideBarItem = ({ item }) => {
 
   const redirectToPage = () => {
     history.push({
-      pathname: "/site-description",
+      pathname: `/site-description/${item.site_id}`,
       state: {
         site: item,
       },
