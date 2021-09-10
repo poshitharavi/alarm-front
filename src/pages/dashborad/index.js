@@ -20,6 +20,7 @@ const Dashboard = () => {
 
     const interval = setInterval(() => {
       getAllAlarms();
+      console.log("a");
     }, 15000);
 
     //run on form load

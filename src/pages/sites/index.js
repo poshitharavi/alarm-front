@@ -19,14 +19,15 @@ const Sites = (props) => {
       await fetchSiteDetails(id);
     };
 
-    const interval = setInterval(() => {
-      // eslint-disable-next-line
-      getAllSites(alarm.alarm_id);
-    }, 15000);
+    // const interval = setInterval(() => {
+    //   // eslint-disable-next-line
+    //   getAllSites(alarm.alarm_id);
+    // }, 15000);
+
     // eslint-disable-next-line
     getAllSites(alarm.alarm_id);
 
-    return () => clearInterval(interval);
+    // return () => clearInterval(interval);
   }, [alarm]);
 
   const fetchSiteDetails = async (id) => {

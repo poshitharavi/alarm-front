@@ -26,21 +26,18 @@ const SiteDescription = (props) => {
   const [hisoryAlarmDetails, setHisoryAlarmDetails] = useState([]);
 
   useEffect(() => {
-    const getActiveAlarmDetails = async (id) => {
+    const getAlarmDetails = async (id) => {
       await fetchActiveAlarmDetails(id);
+      // await fetchHistoryAlarmDetails(id);
     };
 
-    const getHistoryAlarmDetails = async (id) => {
-      await fetchHistoryAlarmDetails(id);
-    };
-
-    getHistoryAlarmDetails(site.site_id); // eslint-disable-next-line
-    getActiveAlarmDetails(site.site_id); // eslint-disable-next-line
-  }, []);
+    getAlarmDetails(site.site_id); // eslint-disable-next-line
+  }, [site]);
 
   const fetchActiveAlarmDetails = async (id) => {
     GetService(`alarm/getAlamsBySite/${id}`).then((result) => {
       if (result.status === undefined) {
+        console.log(result);
         setActiveAlarmDetails(result);
       } else {
         console.log(result.message);
